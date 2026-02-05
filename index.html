@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Message For You ❤️</title>
+    <title>Para Sa Imo ❤️</title>
     <style>
         body {
             display: flex;
@@ -14,127 +14,143 @@
             background-color: #ffe6e6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
+            text-align: center;
         }
 
-        /* Introduction Screen */
-        #intro-screen {
+        .screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #ff4d6d;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 10;
-            transition: opacity 1s ease, visibility 1s;
-            color: white;
-            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: opacity 0.8s ease;
         }
 
-        #intro-screen h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            padding: 0 20px;
-        }
+        #intro-screen { background-color: #ff4d6d; color: white; z-index: 3; }
+        #message-screen { background-color: #ff758f; color: white; z-index: 2; opacity: 0; pointer-events: none; }
 
-        .open-btn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
+        #proposal-container {
+            opacity: 0;
+            transition: opacity 1s ease;
             background: white;
-            color: #ff4d6d;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Main Content */
-        .container {
-            background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 80%;
+            max-width: 350px;
+            width: 90%;
+            z-index: 1;
         }
 
-        h1 {
-            color: #d63384;
-            font-size: 2.2rem;
-            margin-bottom: 20px;
+        .celebration-gif {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 15px;
+            margin: 10px auto 20px auto;
+            display: none;
         }
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
-            position: relative;
-            height: 60px; /* Space for moving button */
-        }
-
+        h1, h2 { margin-bottom: 20px; font-size: 1.5rem; color: #d63384; }
+        #intro-screen h2, #message-screen h1 { color: white; }
+        
         button {
-            padding: 12px 25px;
+            padding: 15px 25px;
             font-size: 1.1rem;
             border: none;
             border-radius: 10px;
             cursor: pointer;
+            font-weight: bold;
         }
 
+        .primary-btn { background: white; color: #ff4d6d; border-radius: 50px; }
         #yesBtn { background-color: #ff4d6d; color: white; }
-        #noBtn { background-color: #6c757d; color: white; transition: 0.1s; }
+        #noBtn { background-color: #6c757d; color: white; }
 
-        .heart { color: #ff4d6d; font-size: 4rem; }
+        /* THIS KEEPS THEM BESIDE EACH OTHER */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            min-height: 60px;
+            width: 100%;
+        }
+
+        .heart { color: #ff4d6d; font-size: 3rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="intro-screen">
-        <h2>Hi, My love loveeee</h2>
-        <button class="open-btn" onclick="openMessage()">Click to Open ❤️</button>
+    <div id="intro-screen" class="screen">
+        <h2>I have a special question for you...</h2>
+        <button class="primary-btn" onclick="showNext('intro-screen', 'message-screen')">Click to Open ❤️</button>
     </div>
 
-    <div class="container">
-        <div class="heart">❤️</div>
+    <div id="message-screen" class="screen">
+        <h1 style="font-style: italic;">"Wa nay daghang pasundayag..."</h1>
+        <button class="primary-btn" onclick="showProposal()">Continue ➡️</button>
+    </div>
+
+    <div id="proposal-container">
+        <div id="main-heart" class="heart">❤️</div>
+        
+        <img id="val-gif" src="ezgif.com-animated-gif-maker.gif" alt="Cute GIF" class="celebration-gif">
+        
         <h1 id="question">Will you be my Valentine?</h1>
         
-        <div class="buttons">
+        <div class="btn-group" id="button-area">
             <button id="yesBtn" onclick="celebrate()">Yes!</button>
-            <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">Neeeeveeerrrr!</button>
+            <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">No</button>
         </div>
     </div>
 
     <script>
-        function openMessage() {
-            const intro = document.getElementById('intro-screen');
-            intro.style.opacity = '0';
+        function showNext(currentId, nextId) {
+            document.getElementById(currentId).style.opacity = '0';
+            document.getElementById(currentId).style.pointerEvents = 'none';
             setTimeout(() => {
-                intro.style.visibility = 'hidden';
-            }, 1000);
+                const next = document.getElementById(nextId);
+                next.style.opacity = '1';
+                next.style.pointerEvents = 'auto';
+            }, 400);
+        }
+
+        function showProposal() {
+            document.getElementById('message-screen').style.opacity = '0';
+            document.getElementById('message-screen').style.pointerEvents = 'none';
+            setTimeout(() => {
+                document.getElementById('proposal-container').style.opacity = '1';
+            }, 600);
         }
 
         function moveButton() {
-            // Limits movement so it stays on screen for mobile
+            const btn = document.getElementById('noBtn');
+            // It only becomes 'fixed' once she tries to click it
+            btn.style.position = 'fixed'; 
             const x = Math.random() * (window.innerWidth - 100);
             const y = Math.random() * (window.innerHeight - 50);
-            const btn = document.getElementById('noBtn');
-            btn.style.position = 'fixed'; // Better for mobile jumping
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
         }
 
         function celebrate() {
-            document.getElementById('question').innerHTML = "Yay! You made me the luckiest person! 🥰";
-            document.querySelector('.buttons').style.display = 'none';
-            document.querySelector('.heart').innerHTML = "💖✨🎉";
+            document.getElementById('question').innerHTML = "Yay! See you on the 14th! 🥰";
+            document.getElementById('button-area').style.display = 'none';
+            document.getElementById('main-heart').innerHTML = "💖✨🎉";
+            
+            const gif = document.getElementById('val-gif');
+            gif.style.display = 'block';
+            
             document.body.style.backgroundColor = "#ffb3c1";
+            document.body.style.transition = "background-color 1s ease";
         }
     </script>
-
 </body>
-</html>
 
+</html>

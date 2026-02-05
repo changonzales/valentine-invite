@@ -32,7 +32,6 @@
             transition: opacity 0.8s ease;
         }
 
-        /* Screens */
         #intro-screen { background-color: #ff4d6d; color: white; z-index: 3; }
         #message-screen { background-color: #ff758f; color: white; z-index: 2; opacity: 0; pointer-events: none; }
 
@@ -77,9 +76,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .lower-btn {
-            margin-top: 50px;
-        }
+        .lower-btn { margin-top: 50px; }
 
         .btn-group {
             display: flex;
@@ -98,8 +95,9 @@
             color: white; 
             position: relative;
             z-index: 999;
-            /* Smooth sliding effect */
             transition: left 0.3s ease, top 0.3s ease; 
+            /* Helps mobile browsers handle the button better */
+            touch-action: manipulation;
         }
 
         .heart { color: #ff4d6d; font-size: 3.5rem; margin-bottom: 10px; }
@@ -119,9 +117,7 @@
 
     <div id="proposal-container">
         <div id="main-heart" class="heart">❤️</div>
-        
         <img id="val-gif" src="ezgif.com-animated-gif-maker.gif" alt="Cute GIF" class="celebration-gif">
-        
         <h1 id="question">Will you be my Valentine?</h1>
         
         <div class="btn-group" id="button-area">
@@ -133,13 +129,23 @@
     <script>
         let canMove = false;
         let hasBeenClickedOnce = false;
+        const noBtn = document.getElementById('noBtn');
+
+        // Handles the mobile touch event to move the button before the click registers
+        noBtn.addEventListener('touchstart', function(e) {
+            if (!canMove) return;
+            // Prevent default behavior to stop the 'click' event from firing
+            e.preventDefault(); 
+            hasBeenClickedOnce = true;
+            moveButton();
+        });
 
         function showNext(currentId, nextId) {
             document.getElementById(currentId).style.opacity = '0';
             document.getElementById(currentId).style.pointerEvents = 'none';
             setTimeout(() => {
                 const next = document.getElementById(nextId);
-                next.style.opacity = '0.5';
+                next.style.opacity = '1';
                 next.style.pointerEvents = 'auto';
             }, 400);
         }
@@ -153,7 +159,6 @@
                 container.style.opacity = '1';
                 container.style.pointerEvents = 'auto';
 
-                // Prevent immediate movement until animation settles
                 setTimeout(() => {
                     canMove = true;
                 }, 1000);
@@ -166,18 +171,16 @@
             const btn = document.getElementById('noBtn');
             btn.style.position = 'fixed'; 
             
-            // Random position within viewport minus button size
             const maxX = window.innerWidth - btn.offsetWidth - 20;
             const maxY = window.innerHeight - btn.offsetHeight - 20;
             
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
+            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
             
             btn.style.left = randomX + 'px';
             btn.style.top = randomY + 'px';
         }
 
-        // Logic for the first click
         function handleNoClick() {
             if (!hasBeenClickedOnce) {
                 hasBeenClickedOnce = true;
@@ -185,7 +188,6 @@
             }
         }
 
-        // Logic for hover (only works after first click)
         function handleNoHover() {
             if (hasBeenClickedOnce) {
                 moveButton();
